@@ -1,0 +1,17 @@
+
+{"result":true,"message":""}
+{"result":false,"message":"command empty"}
+{"result":true,"message":"test-input"}
+{"result":false,"message":"test-input"}
+{"result":true,"message":""}
+{"result":false,"message":"command empty"}
+{"result":true,"message":"test-input"}
+{"result":false,"message":"test-input"}
+{"result":true,"message":""}
+{"result":false,"message":"command empty"}
+{"result":true,"message":"test-input"}
+{"result":false,"message":"test-input"}
+{"result":true,"message":""}
+{"result":false,"message":"command empty"}
+{"result":true,"message":"test-input"}
+{"result":false,"message":"test-input"}

@@ -1,0 +1,2 @@
+{"command":"addItem","payload":{"itemId":1,"categoryId":2,"sellerId":3,"price":4.0,"quantity":5}}
+{"commant":"addItem","payload":{"itemId":1,"categoryId":2,"sellerId":3,"price":4.0,"quantity":5}}
