@@ -62,7 +62,7 @@ go test -tags=integration ./...
 
 ## Tech Stack
 
-* Go v1.19
+* Go v1.21
 * Rest server: [echo](https://echo.labstack.com/)
 * Logger: [zap](https://github.com/uber-go/zap)
 * Config: [viper](https://github.com/spf13/viper)

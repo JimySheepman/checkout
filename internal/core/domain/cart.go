@@ -1,14 +1,13 @@
 package domain
 
 import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
 
 type Cart struct {
-	ID         primitive.ObjectID `bson:"_id"`
-	CreatedAt  time.Time          `bson:"createdAt"`
-	UpdatedAt  time.Time          `bson:"updatedAt"`
-	Items      []*Item            `bson:"items"`
-	TotalPrice float64            `bson:"totalPrice"`
+	ID         string    `db:"ID" bson:"_id" json:"id"`
+	CreatedAt  time.Time `db:"CreatedAt" bson:"createdAt" json:"createdAt"`
+	UpdatedAt  time.Time `db:"UpdatedAt" bson:"updatedAt"  json:"updatedAt"`
+	Items      []*Item   `db:"Items" bson:"items"  json:"items"`
+	TotalPrice float64   `db:"TotalPrice" bson:"totalPrice" json:"TotalPrice"`
 }

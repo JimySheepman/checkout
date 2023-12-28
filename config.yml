@@ -1,10 +1,23 @@
-server:
-  port: 8080
+restserver:
+  addr : ":8080"
+  pprofenable: 1
 
-database:
-  dbname:
-  dbuser: "dbuser"
-  dbpassword: "dbpassword"
+fileserver:
+  inputpath: "./input.txt"
+  outputpath: "./output.txt"
 
-EXAMPLE_VAR: "variable from config.yml"
-EXAMPLE_PATH: "path from config.yml"
+loggerconfig:
+  appname : "checkout-case"
+  loglevel : 0
+  logencoding : "console"
+  environmenttype : "production"
+  graylogaddr : ""
+
+mongodb:
+  addr: "localhost"
+  port: 27017
+  user: "root"
+  password: "example"
+  timeout: 5000
+  name: "shopping"
+  collection: "carts"
