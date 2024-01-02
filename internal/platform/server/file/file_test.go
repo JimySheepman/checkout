@@ -5,15 +5,13 @@ package file
 import (
 	mock_file "checkout-case/mocks/platform"
 	"checkout-case/pkg/config"
+	"checkout-case/pkg/customerr"
 	"context"
-	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
-
-var ErrTest = errors.New("test error")
 
 type fileServerMocks struct {
 	mockFileHandlerClient *mock_file.MockfileHandlerClient
@@ -56,7 +54,7 @@ func TestFileServer_execute(t *testing.T) {
 				config.Cfg.Server.FileServer.InputPath = "../input-test.txt"
 				config.Cfg.Server.FileServer.OutputPath = ""
 
-				mocks.mockFileHandlerClient.EXPECT().AddItemHandler(gomock.Any(), gomock.Any()).Return("", ErrTest)
+				mocks.mockFileHandlerClient.EXPECT().AddItemHandler(gomock.Any(), gomock.Any()).Return("", customerr.ErrTest)
 			},
 		},
 		{
