@@ -3,7 +3,6 @@ package mongodb
 import (
 	"checkout-case/internal/core/domain"
 	"checkout-case/internal/core/models"
-	"checkout-case/pkg/config"
 	"checkout-case/pkg/logger"
 	"context"
 	"fmt"
@@ -11,40 +10,18 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"time"
 )
 
 var cartID string
 
 type cartRepository struct {
-	client     *mongo.Client
 	collection *mongo.Collection
 }
 
-func NewCartRepository() *cartRepository {
-	l := logger.GetLogger().Sugar()
-
-	cfg := config.Cfg.MongoDB
-
-	// example: uri := "mongodb://root:example@localhost:27017/?timeoutMS=5000"
-	uri := fmt.Sprintf("mongodb://%s:%s@%s:%d/?timeoutMS=%d", cfg.User, cfg.Password, cfg.Addr, cfg.Port, cfg.Timeout)
-
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
-	if err != nil {
-		panic(err)
-	}
-	l.Info("mongodb successfully connected")
-
-	err = client.Ping(context.TODO(), readpref.Primary())
-	if err != nil {
-		panic(err)
-	}
-	l.Info("mongodb successfully pinged")
-
+func NewCartRepository(collection *mongo.Collection) *cartRepository {
 	return &cartRepository{
-		client:     client,
-		collection: client.Database(cfg.Name).Collection(cfg.Collection),
+		collection: collection,
 	}
 }
 

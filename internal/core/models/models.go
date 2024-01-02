@@ -131,7 +131,7 @@ type DisplayCartServiceResponse struct {
 	TotalDiscount      float64               `json:"totalDiscount"`
 }
 
-func (r *DisplayCartServiceResponse) ToString() string {
+func (r DisplayCartServiceResponse) ToString() string {
 	res, _ := json.Marshal(r)
 	return string(res)
 }

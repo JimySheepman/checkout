@@ -2,8 +2,9 @@ package http
 
 import (
 	"bytes"
-	mock_handler "checkout-case/handler/mocks"
-	"checkout-case/models"
+	"checkout-case/internal/core/models"
+	mock_handler "checkout-case/mocks"
+	"checkout-case/pkg/customerr"
 	"context"
 	"encoding/json"
 	"github.com/golang/mock/gomock"
@@ -15,11 +16,15 @@ import (
 	"testing"
 )
 
-func setupRestHandlerTest(t *testing.T) (*echo.Echo, *commonMocks, *restHandler) {
+type restHandlerMocks struct {
+	mockCartService *mock_handler.MockCartService
+}
+
+func setupRestHandlerTest(t *testing.T) (*echo.Echo, *restHandlerMocks, *restHandler) {
 	ctrl, _ := gomock.WithContext(context.Background(), t)
 
-	mocks := &commonMocks{
-		mockCartService: mock_handler.NewMockcartService(ctrl),
+	mocks := &restHandlerMocks{
+		mockCartService: mock_handler.NewMockCartService(ctrl),
 	}
 
 	srv := NewRestHandler(mocks.mockCartService)
@@ -74,7 +79,7 @@ func TestRestHandler_AddItemHandler(t *testing.T) {
 			name: "AddItemToCart failure",
 			body: testItem,
 			expectations: func() {
-				mocks.mockCartService.EXPECT().AddItemToCart(gomock.Any(), gomock.Any()).Return(ErrTest)
+				mocks.mockCartService.EXPECT().AddItemToCart(gomock.Any(), gomock.Any()).Return(customerr.ErrTest)
 			},
 		},
 		{
@@ -123,7 +128,7 @@ func TestRestHandler_AddVasItemToItemHandler(t *testing.T) {
 			name: "AddVasItemToItem failure",
 			body: testItem,
 			expectations: func() {
-				mocks.mockCartService.EXPECT().AddVasItemToItem(gomock.Any(), gomock.Any()).Return(ErrTest)
+				mocks.mockCartService.EXPECT().AddVasItemToItem(gomock.Any(), gomock.Any()).Return(customerr.ErrTest)
 			},
 		},
 		{
@@ -169,7 +174,7 @@ func TestRestHandler_RemoveItemHandler(t *testing.T) {
 			name:  "RemoveItemFromCart failure",
 			param: "12",
 			expectations: func() {
-				mocks.mockCartService.EXPECT().RemoveItemFromCart(gomock.Any(), gomock.Any()).Return(ErrTest)
+				mocks.mockCartService.EXPECT().RemoveItemFromCart(gomock.Any(), gomock.Any()).Return(customerr.ErrTest)
 			},
 		},
 		{
@@ -210,7 +215,7 @@ func TestRestHandler_ResetCartHandler(t *testing.T) {
 			name: "ResetCart failure",
 			body: nil,
 			expectations: func() {
-				mocks.mockCartService.EXPECT().ResetCart(gomock.Any()).Return(ErrTest)
+				mocks.mockCartService.EXPECT().ResetCart(gomock.Any()).Return(customerr.ErrTest)
 			},
 		},
 		{
@@ -249,7 +254,7 @@ func TestRestHandler_DisplayCartHandler(t *testing.T) {
 			name: "DisplayCart failure",
 			body: nil,
 			expectations: func() {
-				mocks.mockCartService.EXPECT().DisplayCart(gomock.Any()).Return(nil, ErrTest)
+				mocks.mockCartService.EXPECT().DisplayCart(gomock.Any()).Return(nil, customerr.ErrTest)
 			},
 		},
 		{

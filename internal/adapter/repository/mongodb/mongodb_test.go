@@ -14,7 +14,6 @@ import (
 
 func setupTestRepository() *cartRepository {
 	return &cartRepository{
-		client:     db,
 		collection: db.Database("shopping").Collection("carts"),
 	}
 }
@@ -154,7 +153,7 @@ func TestCartRepository_UpdateVasItemQuantity(t *testing.T) {
 	require.Nil(t, err)
 
 	item := &domain.Item{
-		ID:         primitive.NewObjectID(),
+		ID:         primitive.NewObjectID().String(),
 		ItemId:     1,
 		CategoryId: 1,
 		SellerId:   1,
