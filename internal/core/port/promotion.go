@@ -1,3 +1,5 @@
+//go:generate mockgen -destination=../../../mocks/promotion_mock.go -source=promotion.go
+
 package port
 
 import (

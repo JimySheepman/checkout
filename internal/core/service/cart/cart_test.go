@@ -1,31 +1,27 @@
-//go:generate mockgen -destination=./mocks/cart_mock.go -source=cart.go checkout-case/services
-
 package cart
 
 import (
-	"checkout-case/domain"
-	"checkout-case/models"
-	mock_services "checkout-case/services/mocks"
+	"checkout-case/internal/core/domain"
+	"checkout-case/internal/core/models"
+	mock_services "checkout-case/mocks"
+	"checkout-case/pkg/customerr"
 	"context"
-	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
-var ErrTest = errors.New("test error")
-
 type cartServiceMocks struct {
-	mockCartRepository         *mock_services.MockcartRepository
-	mockPromotionServiceClient *mock_services.MockpromotionServiceClient
+	mockCartRepository         *mock_services.MockCartRepository
+	mockPromotionServiceClient *mock_services.MockPromotionServiceClient
 }
 
 func setupCartServiceTest(t *testing.T) (context.Context, *cartServiceMocks, *cartService) {
 	ctrl, ctx := gomock.WithContext(context.Background(), t)
 
 	mocks := &cartServiceMocks{
-		mockCartRepository:         mock_services.NewMockcartRepository(ctrl),
-		mockPromotionServiceClient: mock_services.NewMockpromotionServiceClient(ctrl),
+		mockCartRepository:         mock_services.NewMockCartRepository(ctrl),
+		mockPromotionServiceClient: mock_services.NewMockPromotionServiceClient(ctrl),
 	}
 
 	srv := NewCartService(mocks.mockCartRepository, mocks.mockPromotionServiceClient)
@@ -58,7 +54,7 @@ func TestCartService_AddItemToCart(t *testing.T) {
 			},
 			isError: true,
 			expectations: func() {
-				mocks.mockCartRepository.EXPECT().GetCart().Return(nil, ErrTest)
+				mocks.mockCartRepository.EXPECT().GetCart().Return(nil, customerr.ErrTest)
 			},
 		},
 		{
@@ -101,7 +97,7 @@ func TestCartService_AddItemToCart(t *testing.T) {
 					},
 					TotalPrice: 150,
 				}, nil)
-				mocks.mockCartRepository.EXPECT().UpdateItemQuantity(gomock.Any(), gomock.Any()).Return(ErrTest)
+				mocks.mockCartRepository.EXPECT().UpdateItemQuantity(gomock.Any(), gomock.Any()).Return(customerr.ErrTest)
 			},
 		},
 		{
@@ -126,7 +122,7 @@ func TestCartService_AddItemToCart(t *testing.T) {
 					TotalPrice: 150,
 				}, nil)
 				mocks.mockCartRepository.EXPECT().UpdateItemQuantity(gomock.Any(), gomock.Any()).Return(nil)
-				mocks.mockCartRepository.EXPECT().AddItem(gomock.Any()).Return(ErrTest)
+				mocks.mockCartRepository.EXPECT().AddItem(gomock.Any()).Return(customerr.ErrTest)
 			},
 		},
 		{
@@ -234,7 +230,7 @@ func TestCartService_sameItemProcess(t *testing.T) {
 			item:    &domain.Item{},
 			isError: true,
 			expectations: func() {
-				mocks.mockCartRepository.EXPECT().UpdateItemQuantity(gomock.Any(), gomock.Any()).Return(ErrTest)
+				mocks.mockCartRepository.EXPECT().UpdateItemQuantity(gomock.Any(), gomock.Any()).Return(customerr.ErrTest)
 			},
 		},
 		{
@@ -332,7 +328,7 @@ func TestCartService_AddVasItemToItem(t *testing.T) {
 			req:     &models.AddVasItemToItemServiceRequest{},
 			isError: true,
 			expectations: func() {
-				mocks.mockCartRepository.EXPECT().FindItemByItemIdFromCart(gomock.Any()).Return(nil, ErrTest)
+				mocks.mockCartRepository.EXPECT().FindItemByItemIdFromCart(gomock.Any()).Return(nil, customerr.ErrTest)
 			},
 		},
 		{
@@ -355,7 +351,7 @@ func TestCartService_AddVasItemToItem(t *testing.T) {
 					Type:  domain.DefaultItem,
 					Price: 120,
 				}, nil)
-				mocks.mockCartRepository.EXPECT().GetCart().Return(nil, ErrTest)
+				mocks.mockCartRepository.EXPECT().GetCart().Return(nil, customerr.ErrTest)
 			},
 		},
 		{
@@ -414,7 +410,7 @@ func TestCartService_AddVasItemToItem(t *testing.T) {
 					},
 					TotalPrice: 100,
 				}, nil)
-				mocks.mockCartRepository.EXPECT().AddVasItemToItemByItemID(gomock.Any(), gomock.Any()).Return(ErrTest)
+				mocks.mockCartRepository.EXPECT().AddVasItemToItemByItemID(gomock.Any(), gomock.Any()).Return(customerr.ErrTest)
 			},
 		},
 	}
@@ -573,7 +569,7 @@ func TestCartService_RemoveItemFromCart(t *testing.T) {
 			itemId:  1,
 			isError: true,
 			expectations: func() {
-				mocks.mockCartRepository.EXPECT().FindItemByItemIdFromCart(gomock.Any()).Return(nil, ErrTest)
+				mocks.mockCartRepository.EXPECT().FindItemByItemIdFromCart(gomock.Any()).Return(nil, customerr.ErrTest)
 			},
 		},
 		{
@@ -582,7 +578,7 @@ func TestCartService_RemoveItemFromCart(t *testing.T) {
 			isError: true,
 			expectations: func() {
 				mocks.mockCartRepository.EXPECT().FindItemByItemIdFromCart(gomock.Any()).Return(&domain.Item{}, nil)
-				mocks.mockCartRepository.EXPECT().RemoveItem(gomock.Any()).Return(ErrTest)
+				mocks.mockCartRepository.EXPECT().RemoveItem(gomock.Any()).Return(customerr.ErrTest)
 			},
 		},
 		{
@@ -622,7 +618,7 @@ func TestCartService_ResetCart(t *testing.T) {
 			name:    "cartRepository.ResetCart failure",
 			isError: true,
 			expectations: func() {
-				mocks.mockCartRepository.EXPECT().ResetCart().Return(ErrTest)
+				mocks.mockCartRepository.EXPECT().ResetCart().Return(customerr.ErrTest)
 			},
 		},
 		{
@@ -662,7 +658,7 @@ func TestCartService_DisplayCart(t *testing.T) {
 			expected: nil,
 			isError:  true,
 			expectations: func() {
-				mocks.mockCartRepository.EXPECT().GetCart().Return(nil, ErrTest)
+				mocks.mockCartRepository.EXPECT().GetCart().Return(nil, customerr.ErrTest)
 			},
 		},
 		{
@@ -692,7 +688,7 @@ func TestCartService_DisplayCart(t *testing.T) {
 					},
 					TotalPrice: 10,
 				}, nil)
-				mocks.mockPromotionServiceClient.EXPECT().FindBestPromotion(gomock.Any(), gomock.Any()).Return(nil, ErrTest)
+				mocks.mockPromotionServiceClient.EXPECT().FindBestPromotion(gomock.Any(), gomock.Any()).Return(nil, customerr.ErrTest)
 			},
 		},
 		{

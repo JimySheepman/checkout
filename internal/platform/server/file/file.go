@@ -3,6 +3,7 @@ package file
 import (
 	"bufio"
 	"checkout-case/internal/core/models"
+	"checkout-case/internal/core/port"
 	"checkout-case/pkg/config"
 	"checkout-case/pkg/logger"
 	"context"
@@ -25,19 +26,11 @@ const (
 
 type CommandHandler func(ctx context.Context, input string) (string, error)
 
-type fileHandlerClient interface {
-	AddItemHandler(ctx context.Context, input string) (string, error)
-	AddVasItemToItemHandler(ctx context.Context, input string) (string, error)
-	RemoveItemHandler(ctx context.Context, input string) (string, error)
-	ResetCartHandler(ctx context.Context, input string) (string, error)
-	DisplayCartHandler(ctx context.Context, input string) (string, error)
-}
-
 type FileServer struct {
-	fileHandlerClient fileHandlerClient
+	fileHandlerClient port.FileHandlerClient
 }
 
-func NewFileServer(fileHandlerClient fileHandlerClient) *FileServer {
+func NewFileServer(fileHandlerClient port.FileHandlerClient) *FileServer {
 	return &FileServer{
 		fileHandlerClient: fileHandlerClient,
 	}

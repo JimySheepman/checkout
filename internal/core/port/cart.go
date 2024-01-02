@@ -1,4 +1,4 @@
-//go:generate mockgen -destination=./mocks/cart_mock.go -source=cart.go
+//go:generate mockgen -destination=../../../mocks/cart_mock.go -source=cart.go
 
 package port
 
