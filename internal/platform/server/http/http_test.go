@@ -1,9 +1,7 @@
-//go:generate mockgen -destination=../../../../mocks/platform/http_mock.go -source=http.go
-
 package http
 
 import (
-	mock_http "checkout-case/mocks/platform"
+	mock_http "checkout-case/mocks"
 	"checkout-case/pkg/config"
 	"context"
 	"github.com/golang/mock/gomock"
@@ -13,14 +11,14 @@ import (
 )
 
 type restServerMocks struct {
-	mockRestHandlerClient *mock_http.MockrestHandlerClient
+	mockRestHandlerClient *mock_http.MockRestHandlerClient
 }
 
 func setupRestServerTest(t *testing.T) (context.Context, *restServerMocks, *RestServer) {
 	ctrl, ctx := gomock.WithContext(context.Background(), t)
 
 	mocks := &restServerMocks{
-		mockRestHandlerClient: mock_http.NewMockrestHandlerClient(ctrl),
+		mockRestHandlerClient: mock_http.NewMockRestHandlerClient(ctrl),
 	}
 
 	srv := NewRestServer(mocks.mockRestHandlerClient)

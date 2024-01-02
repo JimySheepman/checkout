@@ -1,6 +1,7 @@
 package http
 
 import (
+	"checkout-case/internal/core/port"
 	"checkout-case/pkg/config"
 	"context"
 	"github.com/labstack/echo-contrib/pprof"
@@ -10,21 +11,12 @@ import (
 
 const pprofEnabled = 1
 
-type restHandlerClient interface {
-	HealthCheckHandler(c echo.Context) error
-	AddItemHandler(c echo.Context) error
-	AddVasItemToItemHandler(c echo.Context) error
-	RemoveItemHandler(c echo.Context) error
-	ResetCartHandler(c echo.Context) error
-	DisplayCartHandler(c echo.Context) error
-}
-
 type RestServer struct {
 	e                 *echo.Echo
-	restHandlerClient restHandlerClient
+	restHandlerClient port.RestHandlerClient
 }
 
-func NewRestServer(restHandlerClient restHandlerClient) *RestServer {
+func NewRestServer(restHandlerClient port.RestHandlerClient) *RestServer {
 	return &RestServer{
 		e:                 echo.New(),
 		restHandlerClient: restHandlerClient,
@@ -47,7 +39,6 @@ func (s *RestServer) Start(errChan chan error) error {
 
 func (s *RestServer) setMiddlewares() {
 	s.e.Use(
-		middleware.CORS(),
 		middleware.Logger(),
 		middleware.Recover(),
 		middleware.RequestID(),

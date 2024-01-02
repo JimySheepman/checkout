@@ -1,9 +1,7 @@
-//go:generate mockgen -destination=../../../../mocks/platform/file_mock.go -source=file.go
-
 package file
 
 import (
-	mock_file "checkout-case/mocks/platform"
+	mock_file "checkout-case/mocks"
 	"checkout-case/pkg/config"
 	"checkout-case/pkg/customerr"
 	"context"
@@ -14,14 +12,14 @@ import (
 )
 
 type fileServerMocks struct {
-	mockFileHandlerClient *mock_file.MockfileHandlerClient
+	mockFileHandlerClient *mock_file.MockFileHandlerClient
 }
 
 func setupFileServerTest(t *testing.T) (context.Context, *fileServerMocks, *FileServer) {
 	ctrl, ctx := gomock.WithContext(context.Background(), t)
 
 	mocks := &fileServerMocks{
-		mockFileHandlerClient: mock_file.NewMockfileHandlerClient(ctrl),
+		mockFileHandlerClient: mock_file.NewMockFileHandlerClient(ctrl),
 	}
 
 	srv := NewFileServer(mocks.mockFileHandlerClient)
