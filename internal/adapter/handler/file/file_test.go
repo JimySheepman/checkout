@@ -1,28 +1,24 @@
-//go:generate mockgen -destination=./mocks/file_handler_mock.go -source=file_handler.go checkout-case/handler
-
 package file
 
 import (
-	mock_handler "checkout-case/handler/mocks"
-	"checkout-case/models"
+	"checkout-case/internal/core/models"
+	mock_handler "checkout-case/mocks"
+	"checkout-case/pkg/customerr"
 	"context"
-	"errors"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
-var ErrTest = errors.New("test error")
-
-type commonMocks struct {
-	mockCartService *mock_handler.MockcartService
+type fileHandlerMocks struct {
+	mockCartService *mock_handler.MockCartService
 }
 
-func setupFileHandlerTest(t *testing.T) (context.Context, *commonMocks, *fileHandler) {
+func setupFileHandlerTest(t *testing.T) (context.Context, *fileHandlerMocks, *fileHandler) {
 	ctrl, ctx := gomock.WithContext(context.Background(), t)
 
-	mocks := &commonMocks{
-		mockCartService: mock_handler.NewMockcartService(ctrl),
+	mocks := &fileHandlerMocks{
+		mockCartService: mock_handler.NewMockCartService(ctrl),
 	}
 
 	srv := NewFileHandler(mocks.mockCartService)
@@ -53,7 +49,7 @@ func TestFileHandler_AddItemHandler(t *testing.T) {
 			expected: "",
 			isError:  true,
 			expectations: func() {
-				mocks.mockCartService.EXPECT().AddItemToCart(gomock.Any(), gomock.Any()).Return(ErrTest)
+				mocks.mockCartService.EXPECT().AddItemToCart(gomock.Any(), gomock.Any()).Return(customerr.ErrTest)
 			},
 		},
 		{
@@ -105,7 +101,7 @@ func TestFileHandler_AddVasItemToItemHandler(t *testing.T) {
 			expected: "",
 			isError:  true,
 			expectations: func() {
-				mocks.mockCartService.EXPECT().AddVasItemToItem(gomock.Any(), gomock.Any()).Return(ErrTest)
+				mocks.mockCartService.EXPECT().AddVasItemToItem(gomock.Any(), gomock.Any()).Return(customerr.ErrTest)
 			},
 		},
 		{
@@ -157,7 +153,7 @@ func TestFileHandler_RemoveItemHandler(t *testing.T) {
 			expected: "",
 			isError:  true,
 			expectations: func() {
-				mocks.mockCartService.EXPECT().RemoveItemFromCart(gomock.Any(), gomock.Any()).Return(ErrTest)
+				mocks.mockCartService.EXPECT().RemoveItemFromCart(gomock.Any(), gomock.Any()).Return(customerr.ErrTest)
 			},
 		},
 		{
@@ -202,7 +198,7 @@ func TestFileHandler_ResetCartHandler(t *testing.T) {
 			expected: "",
 			isError:  true,
 			expectations: func() {
-				mocks.mockCartService.EXPECT().ResetCart(gomock.Any()).Return(ErrTest)
+				mocks.mockCartService.EXPECT().ResetCart(gomock.Any()).Return(customerr.ErrTest)
 			},
 		},
 		{
@@ -249,7 +245,7 @@ func TestFileHandler_DisplayCartHandler(t *testing.T) {
 			expected: "",
 			isError:  true,
 			expectations: func() {
-				mocks.mockCartService.EXPECT().DisplayCart(gomock.Any()).Return(nil, ErrTest)
+				mocks.mockCartService.EXPECT().DisplayCart(gomock.Any()).Return(nil, customerr.ErrTest)
 			},
 		},
 		{

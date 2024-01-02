@@ -1,4 +1,4 @@
-package file
+package main
 
 import (
 	file_handler "checkout-case/internal/adapter/handler/file"
@@ -29,7 +29,13 @@ func main() {
 		errFileChan = make(chan error, 10)
 	)
 
-	cartRepo := repository.NewCartRepository()
+	mongoCollection, err := repository.Connection()
+	if err != nil {
+		l.Error(fmt.Errorf("mongo connection error: %w", err))
+		return
+	}
+
+	cartRepo := repository.NewCartRepository(mongoCollection)
 
 	if err := cartRepo.Create(); err != nil {
 		l.Error(fmt.Errorf("initil cart error: %w", err))

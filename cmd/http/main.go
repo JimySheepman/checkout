@@ -1,4 +1,4 @@
-package http
+package main
 
 import (
 	http_handler "checkout-case/internal/adapter/handler/http"
@@ -34,7 +34,13 @@ func main() {
 		errRestChan = make(chan error, 10)
 	)
 
-	cartRepo := repository.NewCartRepository()
+	mongoCollection, err := repository.Connection()
+	if err != nil {
+		l.Error(fmt.Errorf("mongo connection error: %w", err))
+		return
+	}
+
+	cartRepo := repository.NewCartRepository(mongoCollection)
 
 	if err := cartRepo.Create(); err != nil {
 		l.Error(fmt.Errorf("initil cart error: %w", err))
